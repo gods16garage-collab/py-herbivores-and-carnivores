@@ -21,6 +21,14 @@ class Animal:
     def __str__(cls) -> str:
         return str(cls.alive)
 
+    def take_damage(self, amount: int) -> None:
+        """Зменшує здоров'я та видаляє тварину з alive, якщо воно ≤ 0."""
+        self.health -= amount
+        if self.health <= 0:
+            self.health = 0
+            if self in Animal.alive:
+                Animal.alive.remove(self)
+
 
 class Herbivore(Animal):
     def hide(self) -> None:
@@ -34,7 +42,4 @@ class Carnivore(Animal):
         if other.hidden:
             return
 
-        other.health -= 50
-        if other.health <= 0:
-            other.health = 0
-            Animal.alive.remove(other)
+        other.take_damage(50)
