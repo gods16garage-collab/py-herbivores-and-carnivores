@@ -1,5 +1,8 @@
+from typing import List
+
+
 class Animal:
-    alive = []
+    alive: List["Animal"] = []
 
     def __init__(self, name: str, health: int = 100) -> None:
         self.name = name
@@ -14,8 +17,9 @@ class Animal:
             f"Hidden: {self.hidden}}}"
         )
 
-    def __str__(self) -> str:
-        return str(Animal.alive)
+    @classmethod
+    def __str__(cls) -> str:
+        return str(cls.alive)
 
 
 class Herbivore(Animal):
@@ -25,16 +29,12 @@ class Herbivore(Animal):
 
 class Carnivore(Animal):
     def bite(self, other: Animal) -> None:
-        # Може кусати тільки травоїдних
         if not isinstance(other, Herbivore):
             return
-        # Не може вкусити, якщо жертва ховається
         if other.hidden:
             return
 
-        # Віднімаємо 50 здоров'я
         other.health -= 50
-
-        # Якщо здоров'я закінчилось — видаляємо з alive
-        if other.health <= 0 and other in Animal.alive:
+        if other.health <= 0:
+            other.health = 0
             Animal.alive.remove(other)
